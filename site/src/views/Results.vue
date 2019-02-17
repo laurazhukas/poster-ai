@@ -11,6 +11,7 @@
         <v-divider/>
         <div class="font-weight-light headline"><span class="font-weight-bold">{{postersCount}}</span> {{posterMsg}}</div>
         <div class="font-weight-light headline"><span class="font-weight-bold">{{usersCount}}</span> {{usersMsg}}</div>
+        <div class="font-weight-light headline"><span class="font-weight-bold">{{totalProcessed}}</span> {{totalMsg}}</div>
         <div class="font-weight-light headline">{{targetMsg}} : <span class="font-weight-bold">{{targetEmotion}}</span></div>
       </div>
 
@@ -181,8 +182,14 @@ export default {
     usersMsg() {
       return `Users Provided Feedback`;
     },
+    totalMsg() {
+      return `Total Images Processed`
+    },
     targetMsg() {
       return `Target Emotion`;
+    },
+    totalProcessed() {
+      return `${this.postersCount * this.usersCount}`;
     }
   }
 }
