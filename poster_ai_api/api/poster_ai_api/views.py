@@ -66,12 +66,12 @@ class FaceViewSet(viewsets.ModelViewSet):
         response = {"session_id": session_id}
 
         for poster in posters:
+            print(poster)
             poster_id = str(uuid.uuid4())
             poster_name = poster['postername'] 
             imageUrls = poster['images']
             for url in imageUrls:
                 analysis = emotionanalysis(url)[0] # 0th index is first face
-                print(analysis)
                 # parsing our response
                 saveToDb = dict()
                 saveToDb['face_id'] = analysis['faceId']
