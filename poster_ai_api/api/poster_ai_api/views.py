@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 import json
 import uuid
+import requests
+from models import Face
 
 
 def face_obj(dict, poster_name, poster_id, session_id, image_uri):
@@ -14,7 +16,6 @@ def face_obj(dict, poster_name, poster_id, session_id, image_uri):
     face.save()
 
 def AddFaceWithId(image_uri, poster_name, poster_id, session_id):
-    res_json = None
 
     url = 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'
     headers = {
@@ -29,7 +30,7 @@ def AddFaceWithId(image_uri, poster_name, poster_id, session_id):
         'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise',
     }
 
-    response = requests.post(face_api_url, params=params, headers=headers, json={"url": image_uri})
+    response = requests.post(url, params=params, headers=headers, json={"url": image_uri})
     faces = response.json()
     face_dict = json.loads(faces)
     face_obj(face_dict, poster_name, poster_id, session_id, image_uri)
@@ -44,8 +45,13 @@ class FaceList(APIView):
             posters = request.POST.get("posters")
             for p in posters:
                 poster_id = str(uuid.uuid4())
-                for i in images:
-                    AddFaceWithId(i, p['postername'], poster_id, session_id)
+                for i in p.images:
+                    AddFaceWithId(i, p.postername, poster_id, session_id)
                     
         return Response(session_id)
+
+class EmotionList(APIView):
+
+    def get(self, request):
+        
         
