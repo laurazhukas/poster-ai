@@ -8,7 +8,7 @@
 
     <!-- Actions/buttons -->
     <v-btn to="/survey">Start New Survey</v-btn>
-    <v-btn>View Past Results</v-btn>
+    <v-btn to="/listing">View Past Results</v-btn>
     
   </div>
 </template>

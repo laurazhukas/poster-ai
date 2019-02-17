@@ -106,6 +106,7 @@ export default {
   data() {
     return {
       uploadImagesURL: 'https://www.googleapis.com/upload/storage/v1/b/poster-ai-bucket/o?uploadType=media&name=app/',
+      pushResultsURL: 'http://34.73.42.130:8000/face/',
       files: [],
       uploading: true,
       evaluating: false,
@@ -221,12 +222,23 @@ export default {
 
             // Use them to construct the request to send to the other API
             let constructed = this.constructForServer(imageMap);
+            console.log(constructed);
 
             // Send to other API, wait for response for these lines
+            axios.post(this.pushResultsURL, constructed, {
+              headers: {'Content-Type': 'application/json'}
+            }).then(response => {
+              // Get the session ID
+              this.resultsID = response.data.session_id;
+              this.processing = false;
+              this.hasResults = true;
+            }).catch(error => {
+              console.log(error.response);
+              this.processing = false;
+              this.hasResults = false;
+            });
 
-            this.resultsID = 0;
-            this.processing = false;
-            this.hasResults = true;
+            // this.resultsID = 0;
 
             // console.log("Constructing...");
             // console.log(constructed);

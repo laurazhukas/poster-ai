@@ -4,7 +4,7 @@
     <div class="font-weight-medium display-3">Survey Results</div>
 
     <!-- Display things in a grid -->
-    <div class="page-grid">
+    <div class="page-grid" v-if="readyToDisplay">
       <!-- Raw numbers overview -->
       <div class="numbers-overview">
         <div class="font-weight-bold headline" style="text-align: center">Basic Stats</div>
@@ -35,9 +35,16 @@
       <div> <!-- User radar graph -->
         <div class="font-weight-bold headline" style="text-align: center">All User Emotions</div>
         <v-divider/>
-         <radar/>
-         <br>
+         <radar :emotions="radialEmotions" :data="rawDataFinal"/>
+         <div class="font-weight-light title">Choose Emotions to Compare</div>
+          <v-combobox class="graph-style"
+            v-model="radialEmotions" :items="possibleEmotions"
+            multiple chips/>
       </div>
+    </div>
+    <div v-else>
+      <div class="headline font-weight-light">Loading...</div>
+      <v-progress-circular indeterminate :size="100" :width="10" />
     </div>
   </div>
 </template>
@@ -46,42 +53,89 @@
 import AvgEmot from '../components/GAverageEmotion';
 import UserAge from '../components/userAgeDemographic.vue';
 import radar from '../components/radarGraph.vue';
+import axios from 'axios';
 
 export default {
   components: { AvgEmot, UserAge, radar },
   mounted() {
-    // Load stuff
+    // Load stuff 
+    let URLid  = this.$route.params.id;
+    axios.get(`${this.getURL}${URLid}`).then(response => {
+      console.log(response);
+      let rawData = response.data;
 
-    // Process the data
-    let posterMap = {};
-    let posterIDs = [];
+      // Process the data
+      let posterMap = {};
+      let posterIDs = [];
 
-    for(let beforeFace of this.beforeProcessed) {
-      // Sort by poster_id
-      if(posterMap[beforeFace.poster_id] == null) {
-        posterIDs.push(beforeFace.poster_id);
-        posterMap[beforeFace.poster_id] = {
-          id: beforeFace.poster_id,
-          name: beforeFace.poster_name,
-          faces: []
-        };
+      for(let beforeFace of rawData) {
+        // Sort by poster_id
+        if(posterMap[beforeFace.poster_id] == null) {
+          posterIDs.push(beforeFace.poster_id);
+          posterMap[beforeFace.poster_id] = {
+            id: beforeFace.poster_id,
+            name: beforeFace.poster_name,
+            faces: []
+          };
+        }
+        posterMap[beforeFace.poster_id].faces.push(beforeFace);
+
+        // Set this value
+        this.usersCount = posterMap[beforeFace.poster_id].faces.length;
       }
-      posterMap[beforeFace.poster_id].faces.push(beforeFace);
-    }
 
-    for(let id of posterIDs) {
-      this.processedData.push(posterMap[id]);
-    }
+      for(let id of posterIDs) {
+        this.processedData.push(posterMap[id]);
+      }
+
+      console.log(this.processedData);
+
+      this.rawDataFinal = response.data;
+
+      // Update basic stuff
+      this.postersCount = posterIDs.length;
+
+      // Pre-load the graph according to the target emotion
+      this.chosenEmotions.push(this.targetEmotion.toLowerCase());
+
+      this.readyToDisplay = true;
+    });
 
 
 
-    console.log(this.processedData);
+    // // Process the data
+    // let posterMap = {};
+    // let posterIDs = [];
 
-    // Pre-load the graph according to the target emotion
-    this.chosenEmotions.push(this.targetEmotion.toLowerCase());
+    // for(let beforeFace of this.beforeProcessed) {
+    //   // Sort by poster_id
+    //   if(posterMap[beforeFace.poster_id] == null) {
+    //     posterIDs.push(beforeFace.poster_id);
+    //     posterMap[beforeFace.poster_id] = {
+    //       id: beforeFace.poster_id,
+    //       name: beforeFace.poster_name,
+    //       faces: []
+    //     };
+    //   }
+    //   posterMap[beforeFace.poster_id].faces.push(beforeFace);
+    // }
+
+    // for(let id of posterIDs) {
+    //   this.processedData.push(posterMap[id]);
+    // }
+
+
+
+    // console.log(this.processedData);
+
+    // // Pre-load the graph according to the target emotion
+    // this.chosenEmotions.push(this.targetEmotion.toLowerCase());
   },
   data() {
     return {
+      getURL: 'http://34.73.42.130:8000/face/?session_id=',
+      readyToDisplay: false,
+      rawDataFinal: [],
       beforeProcessed: [
         {
             "url": "http://127.0.0.1:8000/face/4/",
@@ -261,6 +315,7 @@ export default {
         'Surprise': {key: 'surprise', color: '#ffffff'},
       },
       chosenEmotions: [],
+      radialEmotions: ['happiness', 'neutral', 'anger'],
       possibleEmotions: [
         'anger',
         'contempt',
@@ -271,8 +326,8 @@ export default {
         'sadness',
         'surprise'
       ],
-      postersCount: 5,
-      usersCount: 5,
+      postersCount: 0,
+      usersCount: 0,
       targetEmotion: 'Happiness'
     };
   },

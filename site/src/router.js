@@ -4,6 +4,7 @@ import Home from './views/Home.vue';
 import Survey from './views/Survey.vue';
 import Results from './views/Results.vue';
 import Commercial from './views/commercialOpportunities.vue';
+import Listing from './views/Listing.vue';
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/commercial',
       name: 'commercial',
       component: Commercial
+    },
+    {
+      path: '/listing',
+      name: 'listing',
+      component: Listing
     }
   ]
 })

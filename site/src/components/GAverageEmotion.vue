@@ -27,7 +27,12 @@ export default {
       // Loop through each poster, push a dataset
       for(let poster of this.data) {
         // Set the label
-        labels.push(poster.name);
+        if(poster.name.length > 7) {
+          labels.push(poster.name.substring(0, 7));
+        } else {
+          labels.push(poster.name);
+        }
+        
 
         // Go through each emotion, and then each face
         for(let e of this.emotions) {
@@ -98,7 +103,7 @@ export default {
             stacked: true,
             ticks: {
               suggestedMin: 0,
-              suggestedMax: 1.0
+              suggestedMax: 0
             }
           }],
           xAxes: [{
