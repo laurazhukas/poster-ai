@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'poster_ai_api'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,13 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django_mongodb_engine',
+        'NAME': 'posterdb',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '34.73.39.248',
+        'PORT': '27017',
+        'SUPPORTS_TRANSACTIONS': False
     }
 }
 
