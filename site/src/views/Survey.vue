@@ -22,7 +22,7 @@
 
           <!-- Display the images uploaded -->
           <transition name="new-survey">
-            <v-card>
+            <v-card style="width: 90%; margin: auto">
               <div class="img-container" v-show="displayCard">
                 <transition-group name="new-image">
                   <img v-for="(file, i) in files" :key="i" :src="file.url" style="max-height: 90px">
@@ -33,8 +33,14 @@
 
           <!-- Controls for continuing -->
           <transition name="new-survey">
-            <v-btn id="continue" large v-if="displayCard" @click="startEval">Continue and Enable Webcam</v-btn>
+            <v-btn id="continue" large v-if="displayCard" @click="startEval" style="margin-top: 20px">Continue and Enable Webcam</v-btn>
             <v-btn disabled id="disabled">Add Images to Continue</v-btn>
+          </transition>
+          <transition name="new-survey">
+            <v-slider id="slide" v-if="displayCard" v-model="userCount" thumb-label="always" :min="1" :max="25" class="slider-styles"/>
+          </transition>
+          <transition name="new-survey">
+            <div v-if="displayCard" class="font-weight-medium subheading">Number of Users</div>
           </transition>
         </div>
       </transition>
@@ -43,6 +49,9 @@
       <!-- Evaluation -->
       <transition name="next">
         <div v-if="evaluating" class="evaluation">
+          <!-- Display user ID -->
+          <div class="subheading font-weight-light">User {{evaluatingUser + 1}}</div>
+
           <!-- Image -->
           <div><img :src="files[evalIndex].url" style="max-height: 400px"></div>
 
@@ -64,6 +73,7 @@
 
           <!-- Progress Spinner! -->
           <v-progress-circular indeterminate :size="100" :width="10" />
+
         </div>
       </transition>
 
@@ -88,12 +98,14 @@
 <script>
 import axios from 'axios';
 import FileUpload from 'vue-upload-component';
+const uuidv1 = require('uuid/v1');
 
 export default {
   name: 'survey',
   components: { FileUpload },
   data() {
     return {
+      uploadImagesURL: 'https://www.googleapis.com/upload/storage/v1/b/poster-ai-bucket/o?uploadType=media&name=app/',
       files: [],
       uploading: true,
       evaluating: false,
@@ -102,8 +114,10 @@ export default {
       evalIndex: 0,
       hasReacted: false,
       stream: null,
-      imagesArray: [],
-      resultsID: 0
+      facesPerPoster: {},
+      resultsID: 0,
+      userCount: 1,
+      evaluatingUser: 0,
     };
   },
   computed: {
@@ -133,7 +147,17 @@ export default {
           this.stream = stream;
         });
       }
+
+      // Loop through each poster/image, create an empty array
+      for(let file of this.files) {
+        this.facesPerPoster[file.id] = [];
+      }
+
     },
+    // resetCurrentPoster() {
+    //   this.currentPoster['postername'] = this.files[this.evalIndex].file.name;
+    //   this.currentPoster['images'] = [];
+    // },
     like() {
       // Associate the file with the outcome
       this.files[this.evalIndex].stats = {
@@ -153,30 +177,78 @@ export default {
       this.nextImage();
     },
     nextImage() {
-      // Last image, stop evaluation
+      // Last image
       if(this.evalIndex >= this.files.length - 1) {
-        // Stop webcam
-        this.stream.getTracks()[0].stop();
 
-        // Change UI state
-        this.evaluating = false;
-        this.processing = true;
+        // Stop evaluation if out of users
+        if(this.evaluatingUser >= (this.userCount - 1)) {
+          // Stop webcam
+          this.stream.getTracks()[0].stop();
 
-        // Send results to the server
-        // axios.post(``)
+          // Change UI state
+          this.evaluating = false;
+          this.processing = true;
 
-        // Get ID with results
+          // Store the images on the cloud
+          let imageMap = {};
+          let promises = [];
+          let uuidToFileID = {};
+          for(let file of this.files) {
+            imageMap[file.id] = [];
 
-        // Redirect to results page
-        this.resultsID = 0;
-        this.processing = false;
-        this.hasResults = true;
+
+            for(let img of this.facesPerPoster[file.id]) {
+              let fn = this.uuid();
+              uuidToFileID[`app/${fn}`] = file.id;
+              promises.push(axios.post(`${this.uploadImagesURL}${fn}`, this.dataURItoBlob(img), {
+                headers: {
+                  'Content-Type': 'image/jpeg'
+              },}));
+            }
+          }
+
+          // Handle the face-processing for this image
+          axios.all(promises).then(results => {
+            // Gather the media links from the results
+            results.forEach(response => {
+              let fileid = uuidToFileID[response.data.name];
+              imageMap[fileid].push(response.data.mediaLink);
+              // console.log("Got response");
+              // console.log(response);
+              // console.log("Media link");
+              // console.log(response.data.mediaLink);
+            });
+
+            // Use them to construct the request to send to the other API
+            let constructed = this.constructForServer(imageMap);
+
+            // Send to other API, wait for response for these lines
+
+            this.resultsID = 0;
+            this.processing = false;
+            this.hasResults = true;
+
+            // console.log("Constructing...");
+            // console.log(constructed);
+          });
+
+        }
+        // Otherwise, we'll reset back to the beginning
+        else {
+          this.evaluatingUser += 1;
+          this.evalIndex = 0;
+          this.hasReacted = false;
+        }
+
       } 
       // Continue to next image for evaluation
       else {
         this.evalIndex += 1;
         this.hasReacted = false;
       }
+    },
+    uuid() {
+      return uuidv1();
     },
     /**
      * Captures the current webcam image, saves it to a canvas, and saves the
@@ -185,7 +257,23 @@ export default {
     capture() {
       this.$refs.canvas.getContext("2d").drawImage(this.$refs.video,0,0,640,480);
       this.hasReacted = true;
-      this.imagesArray.push(this.$refs.canvas.toDataURL());
+
+      // Capture the image, associate it with the poster/product
+      this.facesPerPoster[this.files[this.evalIndex].id].push(this.$refs.canvas.toDataURL());
+      // this.imagesArray.push(this.$refs.canvas.toDataURL());
+    },
+    constructForServer(imageMap) {
+      let posters = [];
+      for(let file of this.files) {
+        posters.push({
+          'postername': file.file.name,
+          'images': imageMap[file.id]
+        })
+      }
+
+      return {
+        'posters': posters
+      }
     },
     inputFilter(newFile, oldFile, prevent) {
       if (newFile && !oldFile) {
@@ -201,6 +289,24 @@ export default {
           newFile.url = URL.createObjectURL(newFile.file);
         }
       }
+    },
+    // https://stackoverflow.com/questions/19032406/convert-html5-canvas-into-file-to-be-uploaded
+    dataURItoBlob(dataURI) {
+      // convert base64/URLEncoded data component to raw binary data held in a string
+      let byteString = atob(dataURI.split(',')[1]);
+
+      // separate out the mime component
+      let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+      // write the bytes of the string to an ArrayBuffer
+      let ab = new ArrayBuffer(byteString.length);
+      let ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+
+      //New Code
+      return new Blob([ab], {type: mimeString});
     }
   }
 }
@@ -235,6 +341,11 @@ export default {
 }
 .evaluation {
 
+}
+.slider-styles {
+  max-width: 200px; 
+  margin: auto;
+  margin-top: 40px;
 }
 
 .opacity-transition-enter-active {
