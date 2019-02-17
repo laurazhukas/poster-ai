@@ -19,7 +19,7 @@
       <div class="avg-emotions"> <!-- Average emotions graph -->
         <div class="font-weight-bold headline">Average Emotions per Image</div>
         <v-divider/>
-        <avg-emot class="graph-style" :data="mockData" :emotions="chosenEmotions"/>
+        <avg-emot class="graph-style" :data="processedData" :emotions="chosenEmotions"/>
         <div class="font-weight-light title">Choose Emotions to Compare</div>
         <v-combobox class="graph-style"
           v-model="chosenEmotions" :items="possibleEmotions"
@@ -44,10 +44,92 @@ export default {
   mounted() {
     // Load stuff
 
+    // Process the data
+    let posterMap = {};
+    let posterIDs = [];
+
+    for(let beforeFace of this.beforeProcessed) {
+      // Sort by poster_id
+      if(posterMap[beforeFace.poster_id] == null) {
+        posterIDs.push(beforeFace.poster_id);
+        posterMap[beforeFace.poster_id] = {
+          id: beforeFace.poster_id,
+          name: beforeFace.poster_name,
+          faces: []
+        };
+      }
+      posterMap[beforeFace.poster_id].faces.push(beforeFace);
+    }
+
+    for(let id of posterIDs) {
+      this.processedData.push(posterMap[id]);
+    }
+
+
+
+    console.log(this.processedData);
+
+    // Pre-load the graph according to the target emotion
     this.chosenEmotions.push(this.targetEmotion.toLowerCase());
   },
   data() {
     return {
+      beforeProcessed: [
+        {
+            "url": "http://127.0.0.1:8000/face/4/",
+            "face_id": "4e7b50b0-4cc7-4e72-a2ad-221e5dac3a07",
+            "gender": "male",
+            "age": 29,
+            "anger": "0",
+            "contempt": "0",
+            "disgust": "0",
+            "fear": "0",
+            "happiness": "0",
+            "neutral": "1",
+            "sadness": "0",
+            "surprise": "0",
+            "poster_id": "8d99c923-570d-4991-aea6-b09c09fe3a86",
+            "session_id": "4314ac74-2070-4712-afda-01ffd70dec17",
+            "image_uri": "https://storage.googleapis.com/poster-ai-bucket/aberdeen-faces-dataset/andrew!45.jpg",
+            "poster_name": "blob1"
+        },
+        {
+          "url": "http://127.0.0.1:8000/face/4/",
+          "face_id": "4e7b50b0-4cc7-4e72-a2ad-221e5dac3a07",
+          "gender": "male",
+          "age": 29,
+          "anger": "0.5",
+          "contempt": "0.2",
+          "disgust": "0",
+          "fear": "0",
+          "happiness": "0",
+          "neutral": "0.1",
+          "sadness": "0.2",
+          "surprise": "0",
+          "poster_id": "8d99c923-570d-4991-aea6-b09c09fe3a86",
+          "session_id": "4314ac74-2070-4712-afda-01ffd70dec17",
+          "image_uri": "https://storage.googleapis.com/poster-ai-bucket/aberdeen-faces-dataset/andrew!45.jpg",
+          "poster_name": "blob1"
+        },
+        {
+          "url": "http://127.0.0.1:8000/face/4/",
+          "face_id": "4e7b50b0-4cc7-4e72-a2ad-221e5dac3a07",
+          "gender": "male",
+          "age": 29,
+          "anger": "0.5",
+          "contempt": "0.2",
+          "disgust": "0.000000000000",
+          "fear": "0.000000000000",
+          "happiness": "0.000000000000",
+          "neutral": "0.1",
+          "sadness": "0.2",
+          "surprise": "0.000000000000",
+          "poster_id": "8d99c923-570d-4991-aea6-b09c09fe3123",
+          "session_id": "4314ac74-2070-4712-afda-01ffd70dec17",
+          "image_uri": "https://storage.googleapis.com/poster-ai-bucket/aberdeen-faces-dataset/andrew!45.jpg",
+          "poster_name": "blob2"
+        }
+      ],
       mockData: [
         {
           id: "Poster_A",
@@ -141,6 +223,7 @@ export default {
         },
 
       ],
+      processedData: [],
       emotions: {
         'Anger': {key: 'anger', color: '#ffffff'},
         'Contempt': {key: 'contempt', color: '#ffffff'},

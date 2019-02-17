@@ -27,7 +27,7 @@ export default {
       // Loop through each poster, push a dataset
       for(let poster of this.data) {
         // Set the label
-        labels.push(poster.id);
+        labels.push(poster.name);
 
         // Go through each emotion, and then each face
         for(let e of this.emotions) {
@@ -35,7 +35,8 @@ export default {
 
           // Add up the emotional value of all the faces
           for(let f of poster.faces) {
-            total += f.faceAttributes.emotions[e];
+            // total += f.faceAttributes.emotions[e];
+            total += parseFloat(f[e]);
           }
 
           // Average
