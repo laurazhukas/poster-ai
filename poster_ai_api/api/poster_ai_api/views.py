@@ -7,12 +7,14 @@ from rest_framework.response import Response
 import json
 import uuid
 import requests
-from models import Face
+from api.poster_ai_api.models import Face
+from rest_framework import viewsets
+from api.poster_ai_api.serializers import FaceSerializer
 
 
 def face_obj(dict, poster_name, poster_id, session_id, image_uri):
     poster_id = str(uuid.uuid4())
-    face = Face(dict['faceId'], dict['gender'], dict['age'], dict['emotion'], poster_name, poster_id, session_id, image_uri)
+    face = Face.setJsonParams(dict['faceId'], dict['gender'], dict['age'], dict['emotion'], poster_name, poster_id, session_id, image_uri)
     face.save()
 
 def AddFaceWithId(image_uri, poster_name, poster_id, session_id):
@@ -50,8 +52,16 @@ class FaceList(APIView):
                     
         return Response(session_id)
 
+
+
 class EmotionList(APIView):
 
     def get(self, request):
-        
+        pass
+
+
+class TestList(APIView):
+
+    def get(self, request):
+        return Response("Hello!")
         
