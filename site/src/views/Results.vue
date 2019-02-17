@@ -7,15 +7,16 @@
     <div class="page-grid">
       <!-- Raw numbers overview -->
       <div class="numbers-overview">
-        <div class="font-weight-light headline">{{postersCount}} {{posterMsg}}</div>
-        <div class="font-weight-light headline">{{usersCount}} {{usersMsg}}</div>
-        <div class="font-weight-light headline"><span class="">{{targetMsg}}</span> : {{targetEmotion}}</div>
+        <div class="font-weight-light headline"><span class="font-weight-bold">{{postersCount}}</span> {{posterMsg}}</div>
+        <div class="font-weight-light headline"><span class="font-weight-bold">{{usersCount}}</span> {{usersMsg}}</div>
+        <div class="font-weight-light headline">{{targetMsg}} : <span class="font-weight-bold">{{targetEmotion}}</span></div>
       </div>
 
 
       <div class="avg-emotions"> <!-- Average emotions graph -->
-        <avg-emot class="graph-style"/>
-        <v-combobox label="Select Emotions" class="graph-style"
+        <avg-emot class="graph-style" :data="mockData" :emotions="chosenEmotions"/>
+        <div class="font-weight-bold title">Choose Emotions to Compare</div>
+        <v-combobox class="graph-style"
           v-model="chosenEmotions" :items="possibleEmotions"
           multiple chips/>
       </div>
@@ -27,9 +28,102 @@
 import AvgEmot from '../components/GAverageEmotion';
 
 export default {
-  components: { AvgEmot },
+  components: { AvgEmot }, // Need a mounted method for the GET request
   data() {
     return {
+      mockData: [
+        {
+          id: "Poster_A",
+          faces: [
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0, "contempt": 0,
+                  "disgust": 0, "fear": 0,
+                  "happiness": 0, "neutral": 0.5,
+                  "sadness": 0, "surprise": 0
+                }
+              }
+            },
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0, "contempt": 0.1,
+                  "disgust": 0, "fear": 0,
+                  "happiness": 0.5, "neutral": 0.0,
+                  "sadness": 0, "surprise": 0.2
+                }
+              }
+            },
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0, "contempt": 0.0,
+                  "disgust": 0, "fear": 0,
+                  "happiness": 0.9, "neutral": 0.0,
+                  "sadness": 0, "surprise": 0.5
+                }
+              }
+            },
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0.3, "contempt": 0.5,
+                  "disgust": 0, "fear": 0,
+                  "happiness": 0.1, "neutral": 0.2,
+                  "sadness": 0, "surprise": 0.2
+                }
+              }
+            },
+          ]
+        },
+        {
+          id: "Poster_B",
+          faces: [
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0, "contempt": 0,
+                  "disgust": 0, "fear": 0,
+                  "happiness": 0, "neutral": 0.2,
+                  "sadness": 0, "surprise": 0.3
+                }
+              }
+            },
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0, "contempt": 0.1,
+                  "disgust": 0, "fear": 0,
+                  "happiness": 0.9, "neutral": 0.0,
+                  "sadness": 0, "surprise": 0.2
+                }
+              }
+            },
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0, "contempt": 0.0,
+                  "disgust": 0, "fear": 0.4,
+                  "happiness": 0.3, "neutral": 0.0,
+                  "sadness": 0, "surprise": 0.5
+                }
+              }
+            },
+            {
+              faceAttributes: {
+                emotions: {
+                  "anger": 0.3, "contempt": 0.5,
+                  "disgust": 0, "fear": 0.9,
+                  "happiness": 0.1, "neutral": 0.2,
+                  "sadness": 0, "surprise": 0.2
+                }
+              }
+            },
+          ]
+        },
+
+      ],
       emotions: {
         'Anger': {key: 'anger', color: '#ffffff'},
         'Contempt': {key: 'contempt', color: '#ffffff'},
@@ -42,14 +136,14 @@ export default {
       },
       chosenEmotions: [],
       possibleEmotions: [
-        'Anger',
-        'Contempt',
-        'Disgust',
-        'Fear',
-        'Happiness',
-        'Neutral',
-        'Sadness',
-        'Surprise'
+        'anger',
+        'contempt',
+        'disgust',
+        'fear',
+        'happiness',
+        'neutral',
+        'sadness',
+        'surprise'
       ],
       postersCount: 5,
       usersCount: 5,
@@ -75,6 +169,7 @@ export default {
   max-height: 400px;
   max-width: 500px;
   margin: auto;
+  margin-bottom: 20px;
 }
 .page-style {
   text-align: center;
