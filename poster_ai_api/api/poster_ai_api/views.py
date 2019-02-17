@@ -64,33 +64,38 @@ class FaceViewSet(viewsets.ModelViewSet):
         # generate session id and response
         session_id = str(uuid.uuid4())
         response = {"session_id": session_id}
-
+        
         for poster in posters:
-            print(poster)
             poster_id = str(uuid.uuid4())
             poster_name = poster['postername'] 
             imageUrls = poster['images']
             for url in imageUrls:
-                analysis = emotionanalysis(url)[0] # 0th index is first face
-                # parsing our response
-                saveToDb = dict()
-                saveToDb['face_id'] = analysis['faceId']
-                saveToDb['poster_id'] = poster_id
-                saveToDb['session_id'] = session_id
-                saveToDb['poster_name'] = poster_name
-                saveToDb['gender'] = analysis["faceAttributes"]["gender"]
-                saveToDb['age'] = analysis["faceAttributes"]["age"]
-                saveToDb['anger'] = analysis["faceAttributes"]["emotion"]["anger"]
-                saveToDb['contempt'] = analysis["faceAttributes"]["emotion"]["contempt"]
-                saveToDb['disgust'] = analysis["faceAttributes"]["emotion"]["disgust"]
-                saveToDb['fear'] = analysis["faceAttributes"]["emotion"]["fear"]
-                saveToDb['happiness'] = analysis["faceAttributes"]["emotion"]["happiness"]
-                saveToDb['neutral'] = analysis["faceAttributes"]["emotion"]["neutral"]
-                saveToDb['sadness'] = analysis["faceAttributes"]["emotion"]["sadness"]
-                saveToDb['surprise'] = analysis["faceAttributes"]["emotion"]["surprise"]
-                saveToDb['image_uri'] = url
+                analysis = emotionanalysis(url)
+                print(analysis)
 
-                Face.objects.create(**saveToDb)
+                # 0th index is first face
+                if analysis:
+                    analysis = analysis[0]
+
+                    # parsing our response
+                    saveToDb = dict()
+                    saveToDb['face_id'] = analysis['faceId']
+                    saveToDb['poster_id'] = poster_id
+                    saveToDb['session_id'] = session_id
+                    saveToDb['poster_name'] = poster_name
+                    saveToDb['gender'] = analysis["faceAttributes"]["gender"]
+                    saveToDb['age'] = analysis["faceAttributes"]["age"]
+                    saveToDb['anger'] = analysis["faceAttributes"]["emotion"]["anger"]
+                    saveToDb['contempt'] = analysis["faceAttributes"]["emotion"]["contempt"]
+                    saveToDb['disgust'] = analysis["faceAttributes"]["emotion"]["disgust"]
+                    saveToDb['fear'] = analysis["faceAttributes"]["emotion"]["fear"]
+                    saveToDb['happiness'] = analysis["faceAttributes"]["emotion"]["happiness"]
+                    saveToDb['neutral'] = analysis["faceAttributes"]["emotion"]["neutral"]
+                    saveToDb['sadness'] = analysis["faceAttributes"]["emotion"]["sadness"]
+                    saveToDb['surprise'] = analysis["faceAttributes"]["emotion"]["surprise"]
+                    saveToDb['image_uri'] = url
+
+                    Face.objects.create(**saveToDb)
 
         return Response(response, status=status.HTTP_201_CREATED)
 
