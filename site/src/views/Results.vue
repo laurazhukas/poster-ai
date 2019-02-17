@@ -40,6 +40,11 @@ import UserAge from '../components/userAgeDemographic.vue';
 
 export default {
   components: { AvgEmot, UserAge },
+  mounted() {
+    // Load stuff
+
+    this.chosenEmotions.push(this.targetEmotion.toLowerCase());
+  },
   data() {
     return {
       mockData: [
