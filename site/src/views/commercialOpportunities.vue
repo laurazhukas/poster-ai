@@ -13,26 +13,29 @@
     <br>
     <br>
 
-    <v-layout align-start justify-space-around row fill-height>
-    <v-flex md2>
-     <v-card>
-        <img src="../assets/ACVLogo.jpg" height="160" width="160"/>
-        <v-card-actions>
-          <v-btn flat color="black">Go to Survey</v-btn>
-        </v-card-actions>
+    <v-layout align-start justify-space-around row wrap>
+    <!-- <v-flex sm6  v-for="url in urls">
+     
+    </v-flex> -->
+    <v-card  v-for="url in urls" style="width: 240px; height: 240px; margin: auto; margin-bottom: 30px;">
+      <v-card-media style="height: 160px; display: flex; justify-content: center; align-items: center">
+        <img :src="url" style="max-height: 160px; max-width: 160px"/>
+      </v-card-media>
+      <v-card-actions>
+        <v-btn flat color="black">Go to Survey</v-btn>
+      </v-card-actions>
     </v-card>
-    </v-flex>
-     <v-flex md2>
-       <v-card>
-        <img src="../assets/constellationLogo.jpg" height="160" width="160"/>
+     <!-- <v-flex md2>
+       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
+        <img src="../assets/constellationLogo.jpg" style="max-height: 160px; max-width: 160px"/>
         <v-card-actions>
           <v-btn flat color="black">Go to Survey</v-btn>
         </v-card-actions>
       </v-card>
       </v-flex>
        <v-flex md2>
-       <v-card>
-        <img src="../assets/dattoLogo.jpg" height="160" width="160"/>
+       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
+        <img src="../assets/dattoLogo.jpg" style="max-height: 160px; max-width: 160px"/>
         <v-card-actions>
           <v-btn flat color="black">Go to Survey</v-btn>
         </v-card-actions>
@@ -40,8 +43,8 @@
       </v-flex>
 
       <v-flex md2>
-       <v-card>
-        <img src="../assets/googleLogo.jpg" height="160" width="160"/>
+       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
+        <img src="../assets/googleLogo.jpg" style="max-height: 160px; max-width: 160px"/>
         <v-card-actions>
           <v-btn flat color="black">Go to Survey</v-btn>
         </v-card-actions>
@@ -49,13 +52,13 @@
       </v-flex>
 
       <v-flex md2>
-       <v-card>
-        <img src="../assets/readmeLogo.jpg" height="160" width="160"/>
+       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
+        <img src="../assets/readmeLogo.jpg" style="max-height: 160px; max-width: 160px"/>
         <v-card-actions>
           <v-btn flat color="black">Go to Survey</v-btn>
         </v-card-actions>
       </v-card>
-      </v-flex>
+      </v-flex> -->
     </v-layout>
     
     
@@ -63,7 +66,19 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    data() {
+      return {
+        urls: [
+          require('../assets/ACVLogo.jpg'),
+          require('../assets/constellationLogo.jpg'),
+          require('../assets/dattoLogo.jpg'),
+          require('../assets/googleLogo.jpg'),
+          require('../assets/readmeLogo.jpg')
+        ]
+      };
+    }
+  }
 </script>
 
 <style>

@@ -3,7 +3,7 @@
     <br>
     <h1>The Developers Behind Poster AI</h1>
     <br>
-    <v-layout align-start justify-space-around row fill-height>
+    <v-layout align-start justify-space-around row wrap>
     <v-flex md2>
      <v-card>
         <img src="../assets/sri.jpg"/>

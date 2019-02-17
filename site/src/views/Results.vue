@@ -7,6 +7,8 @@
     <div class="page-grid">
       <!-- Raw numbers overview -->
       <div class="numbers-overview">
+        <div class="font-weight-bold headline" style="text-align: center">Basic Stats</div>
+        <v-divider/>
         <div class="font-weight-light headline"><span class="font-weight-bold">{{postersCount}}</span> {{posterMsg}}</div>
         <div class="font-weight-light headline"><span class="font-weight-bold">{{usersCount}}</span> {{usersMsg}}</div>
         <div class="font-weight-light headline">{{targetMsg}} : <span class="font-weight-bold">{{targetEmotion}}</span></div>
@@ -14,14 +16,18 @@
 
 
       <div class="avg-emotions"> <!-- Average emotions graph -->
+        <div class="font-weight-bold headline">Average Emotions per Image</div>
+        <v-divider/>
         <avg-emot class="graph-style" :data="mockData" :emotions="chosenEmotions"/>
-        <div class="font-weight-bold title">Choose Emotions to Compare</div>
+        <div class="font-weight-light title">Choose Emotions to Compare</div>
         <v-combobox class="graph-style"
           v-model="chosenEmotions" :items="possibleEmotions"
           multiple chips/>
       </div>
       
-      <div>
+      <div> <!-- User age graph -->
+        <div class="font-weight-bold headline" style="text-align: center">User Age Breakdown</div>
+        <v-divider/>
         <user-age/>
       </div>
     </div>
