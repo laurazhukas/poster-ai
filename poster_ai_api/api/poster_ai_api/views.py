@@ -56,15 +56,14 @@ class FaceViewSet(viewsets.ModelViewSet):
       return queryset.order_by('-age')
 
     def create(self, request):
-        # response body
-        response = dict()
 
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         posters = body['posters']
 
-        # generate session id
+        # generate session id and response
         session_id = str(uuid.uuid4())
+        response = {"session_id": session_id}
 
         for poster in posters:
             poster_id = str(uuid.uuid4())
@@ -93,7 +92,7 @@ class FaceViewSet(viewsets.ModelViewSet):
 
                 Face.objects.create(**saveToDb)
 
-        return Response(saveToDb, status=status.HTTP_201_CREATED)
+        return Response(response, status=status.HTTP_201_CREATED)
 
 
 # class FaceList(APIView):
