@@ -11,4 +11,5 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class FaceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Face
-        fields = {'face_id', 'gender', 'age', 'emotion', 'poster_name', 'poster_id', 'session_id', 'image_uri'}
+        fields = '__all__'
+        # fields = {'face_id', 'gender', 'age', 'emotion', 'poster_name', 'poster_id', 'session_id', 'image_uri'}

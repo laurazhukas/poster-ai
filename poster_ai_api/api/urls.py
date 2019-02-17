@@ -16,10 +16,14 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
-from api.poster_ai_api.views import FaceList, TestList
+from rest_framework import routers
+from api.poster_ai_api.views import FaceViewSet
+
+router = routers.DefaultRouter()
+router.register(r'face', FaceViewSet)
 
 urlpatterns = [
+    url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
-    path(r'^api/', FaceList.as_view()),
-    path(r'^test/', TestList.as_view())
+    # path(r'^test/', TestList.as_view())
 ]
