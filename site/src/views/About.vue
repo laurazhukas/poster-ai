@@ -52,9 +52,10 @@
     
     <br>
     <h1>Our Tech Stack</h1>
-    <p class="font-weight-thin headline">The frontend was completed using Vue.js, FRAMEWORK FOR FILE UPLOADS, ETC.
-      The backend was done in python and Django for ... . We also used the google cloud platform,
-      Azure, ....
+    <p class="font-weight-thin headline">We used Vue.js for the frontend to first gather data from the user. 
+      Then, using Azure's cognitive services we analyzed the emotions the user displayed while looking at the posters. 
+      This was integrated into a python and mongo DB backend. The results were then sent back to be processed and 
+      displayed in the results section.
     </p>
 
     <h1>Thank you Brickhacks and Sponsors!</h1>
