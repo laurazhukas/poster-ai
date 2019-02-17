@@ -27,9 +27,16 @@
       </div>
       
       <div> <!-- User age graph -->
-        <div class="font-weight-bold headline" style="text-align: center">User Age Breakdown</div>
+        <div class="font-weight-bold headline" style="text-align: center">User Age Demographic</div>
         <v-divider/>
         <user-age/>
+      </div>
+
+      <div> <!-- User radar graph -->
+        <div class="font-weight-bold headline" style="text-align: center">All User Emotions</div>
+        <v-divider/>
+         <radar/>
+         <br>
       </div>
     </div>
   </div>
@@ -38,9 +45,10 @@
 <script>
 import AvgEmot from '../components/GAverageEmotion';
 import UserAge from '../components/userAgeDemographic.vue';
+import radar from '../components/radarGraph.vue';
 
 export default {
-  components: { AvgEmot, UserAge },
+  components: { AvgEmot, UserAge, radar },
   mounted() {
     // Load stuff
 

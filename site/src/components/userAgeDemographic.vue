@@ -20,7 +20,7 @@ export default {
         datasets: [{
         //   label: `User Age Demographics - ${this.age}`,
           label: 'Test Label',
-          data: [24, 36, 57, 93],
+          data: [93, 57, 36, 24],
           backgroundColor: ["#FF6384",'#81a1d1', "#36A2EB", "#FFCE56"]
         },]
       }
@@ -29,11 +29,6 @@ export default {
   data() {
     return {
       options: {
-       title: {
-           display: true,
-           position: "bottom",
-           text: "User Age Demographics"
-       },
         maintainAspectRatio: false
       }
     };

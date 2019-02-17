@@ -1,6 +1,5 @@
 <template>
   <v-app>
-
     <!-- Navigation bar -->
     <v-toolbar dense flat dark color=black>
       <v-toolbar-title>Poster AI</v-toolbar-title>
