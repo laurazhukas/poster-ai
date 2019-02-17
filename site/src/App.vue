@@ -3,7 +3,7 @@
 
     <!-- Navigation bar -->
     <v-toolbar dense flat>
-      <v-toolbar-title>Poster-AI</v-toolbar-title>
+      <v-toolbar-title>Poster AI</v-toolbar-title>
       <v-spacer/>
       <v-toolbar-side-icon class="hidden-sm-and-up" @click="drawerOpen = !drawerOpen"/>
       <v-toolbar-items class="hidden-xs-only">

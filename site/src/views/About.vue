@@ -2,6 +2,7 @@
   <div class="about">
     <br>
     <h1>The Developers Behind Poster AI</h1>
+    <br>
     <v-layout align-start justify-space-around row fill-height>
     <v-flex md2>
      <v-card>
