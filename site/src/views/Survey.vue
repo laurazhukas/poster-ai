@@ -33,7 +33,7 @@
 
           <!-- Controls for continuing -->
           <transition name="new-survey">
-            <v-btn id="continue" large v-if="displayCard" @click="startEval">Continue</v-btn>
+            <v-btn id="continue" large v-if="displayCard" @click="startEval">Continue and Enable Webcam</v-btn>
             <v-btn disabled id="disabled">Add Images to Continue</v-btn>
           </transition>
         </div>
@@ -47,8 +47,7 @@
           <div><img :src="files[evalIndex].url" style="max-height: 400px"></div>
 
           <!-- Upload button -->
-          <v-btn @click="startReaction" :disabled="reacting">Capture Reaction</v-btn>
-          <v-btn @click="capture">Cap</v-btn>
+          <v-btn @click="capture" :disabled="hasReacted">Capture Reaction</v-btn>
 
           <!-- Like/dislike -->
           <div>
@@ -59,14 +58,24 @@
         </div>
       </transition>
 
+      <transition name="next">
+        <div v-if="!evaluating && !uploading" class="evaluation">
+          <div class="headline font-weight-light font-italic">Processing results... Pretty graphs incoming soon!</div>
+
+          <!-- Progress Spinner! -->
+          <v-progress-circular indeterminate :size="100" :width="10" />
+        </div>
+      </transition>
+
       <video v-show="false" ref="video" id="video" width="640" height="480" autoplay></video>
-      <canvas ref="canvas" id="canvas" width="640" height="480"/>
+      <canvas v-show="false" ref="canvas" id="canvas" width="640" height="480"/>
       
     </div>
   </transition>
 </template>
 
 <script>
+import axios from 'axios';
 import FileUpload from 'vue-upload-component';
 
 export default {
@@ -77,10 +86,11 @@ export default {
       files: [],
       uploading: true,
       evaluating: false,
-      confirmation: false,
+      processing: false,
       evalIndex: 0,
       hasReacted: false,
-      reacting: false
+      stream: null,
+      imagesArray: [],
     };
   },
   computed: {
@@ -96,6 +106,17 @@ export default {
       this.uploading = false;
       this.evaluating = true;
       this.evalIndex = 0;
+
+      // Enable webcam
+      let video = this.$refs.video;
+      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
+          // video.src = window.URL.createObjectURL(stream);
+          video.srcObject = stream;
+          video.play();
+          this.stream = stream;
+        });
+      }
     },
     like() {
       // Associate the file with the outcome
@@ -116,51 +137,32 @@ export default {
       this.nextImage();
     },
     nextImage() {
-      // Check for remaining files
+      // Last image, stop evaluation
       if(this.evalIndex >= this.files.length - 1) {
+        // Stop webcam
+        this.stream.getTracks()[0].stop();
+
+        // Change UI state
         this.evaluating = false;
-        this.confirmation = true;
-        this.hasReacted = false;
-      } else {
+        this.processing = true;
+
+        // Send results to the server
+        // axios.post(``)
+      } 
+      // Continue to next image for evaluation
+      else {
         this.evalIndex += 1;
+        this.hasReacted = false;
       }
     },
-    startReaction() {
-      this.reacting = true;
-
-      let video = this.$refs.video;
-      if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
-          // video.src = window.URL.createObjectURL(stream);
-          video.srcObject = stream;
-          video.play();
-
-          // For capturing the reaction
-          // function capture(context, video) {
-          //   // let canvas = this.$refs.canvas;
-          //   // let context = canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
-          //   context.drawImage(video, 0, 0, 640, 480);
-
-          // }
-        });
-        
-      }
-    },
+    /**
+     * Captures the current webcam image, saves it to a canvas, and saves the
+     * image to an array that'll be passed to the server. 
+     */
     capture() {
-      this.$refs.canvas.getContext("2d").drawImage(this.$refs.video,
-      0,0,640,480);
-    },
-    // capture(context, video) {
-    //   // let canvas = this.$refs.canvas;
-    //   // let context = canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
-    //   console.log("Capturing...");
-    //   context.drawImage(video, 0, 0, 640, 480);
-    //   // video.stop();
-    //   this.endReaction();
-    // },
-    endReaction() {
-      this.reacting = false;
+      this.$refs.canvas.getContext("2d").drawImage(this.$refs.video,0,0,640,480);
       this.hasReacted = true;
+      this.imagesArray.push(this.$refs.canvas.toDataURL());
     },
     inputFilter(newFile, oldFile, prevent) {
       if (newFile && !oldFile) {
@@ -187,7 +189,8 @@ export default {
   grid-template-columns: 50% 50%;
 }
 .file-upload {
-  width: 100%;
+  margin-top: 20px;
+  width: 90%;
   height: 100px;
 }
 .upload-space {
