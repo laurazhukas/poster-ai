@@ -1,10 +1,10 @@
 <template>
   <div class="home-center">
     <!-- Large intro text -->
-    <div class="font-weight-medium display-3">Want to Make Some Quick Cash?</div>
+    <div class="font-weight-medium display-3">Experince the Simplicity of Poster AI</div>
     <!-- Sub text -->
     <br>
-    <div class="font-weight-thin headline">Here's How: <br>
+    <div class="font-weight-thin headline">The User Experience: <br>
     1. Choose a company below<br>
     2. Complete their survey<br>
     3. Collect your cash
@@ -12,8 +12,7 @@
     <br>
     <br>
     <br>
-
-    <v-layout align-start justify-space-around row fill-height>
+    <v-layout align-start justify-space-around row fill-height wrap>
     <v-flex md2>
      <v-card>
         <img src="../assets/ACVLogo.jpg" height="160" width="160"/>
