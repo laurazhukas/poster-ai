@@ -15,7 +15,11 @@
 
     <!-- Drawer for mobile menu -->
     <v-navigation-drawer v-model="drawerOpen" absolute temporary right>
-      <v-list>
+      <v-list style="padding-top: 0">
+        <v-list-tile style="background-color: #000; color: #fff;">
+          <v-list-tile-title class="font-weight-bold subheading">Menu</v-list-tile-title>
+        </v-list-tile>
+
         <!-- Home Link -->
         <v-list-tile to="/">
           <v-list-tile-action> <v-icon>home</v-icon> </v-list-tile-action>
@@ -30,7 +34,6 @@
 
         <!-- Commercial Opportunities Link -->
         <v-list-tile to="/commercial">
-          <v-list-tile-action> <v-icon>opportunities</v-icon> </v-list-tile-action>
           <v-list-tile-title>Commercial Opportunities</v-list-tile-title>
         </v-list-tile>
       </v-list>

@@ -19,11 +19,11 @@
     
     <br>
     <h1>Our Tech Stack</h1>
-    <p class="font-weight-thin title" style="margin-bottom: 35px;">We used Vue.js for the frontend to first gather data from the user. 
+    <div class="font-weight-thin title" style="margin-bottom: 35px;">We used Vue.js for the frontend to first gather data from the user. 
       Then, using Azure's cognitive services we analyzed the emotions the user displayed while looking at the posters. 
       This was integrated into a python and mongo DB backend. The results were then sent back to be processed and 
       displayed in the results section.
-    </p>
+    </div>
 
     <h1>Thank you Brickhacks and Sponsors!</h1>
     <p class="font-weight-thin title">A huge thanks goes out to Brickhacks and the organizing team for putting together such a great event!
@@ -55,6 +55,9 @@
 <style>
 .about {
   text-align: center;
+}
+.title {
+  line-height: 1.5 !important;
 }
 </style>
 
