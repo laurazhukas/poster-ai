@@ -47,7 +47,8 @@
           <div><img :src="files[evalIndex].url" style="max-height: 400px"></div>
 
           <!-- Upload button -->
-          <v-btn @click="startReaction" :disabled="reacting">Upload Reaction</v-btn>
+          <v-btn @click="startReaction" :disabled="reacting">Capture Reaction</v-btn>
+          <v-btn @click="capture">Cap</v-btn>
 
           <!-- Like/dislike -->
           <div>
@@ -58,7 +59,8 @@
         </div>
       </transition>
 
-      <video ref="video" id="video" width="640" height="480" autoplay></video>
+      <video v-show="false" ref="video" id="video" width="640" height="480" autoplay></video>
+      <canvas ref="canvas" id="canvas" width="640" height="480"/>
       
     </div>
   </transition>
@@ -118,6 +120,7 @@ export default {
       if(this.evalIndex >= this.files.length - 1) {
         this.evaluating = false;
         this.confirmation = true;
+        this.hasReacted = false;
       } else {
         this.evalIndex += 1;
       }
@@ -128,10 +131,36 @@ export default {
       let video = this.$refs.video;
       if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({video: true}).then(stream => {
-          video.src = window.URL.createObjectURL(stream);
+          // video.src = window.URL.createObjectURL(stream);
+          video.srcObject = stream;
           video.play();
+
+          // For capturing the reaction
+          // function capture(context, video) {
+          //   // let canvas = this.$refs.canvas;
+          //   // let context = canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+          //   context.drawImage(video, 0, 0, 640, 480);
+
+          // }
         });
+        
       }
+    },
+    capture() {
+      this.$refs.canvas.getContext("2d").drawImage(this.$refs.video,
+      0,0,640,480);
+    },
+    // capture(context, video) {
+    //   // let canvas = this.$refs.canvas;
+    //   // let context = canvas.getContext("2d").drawImage(video, 0, 0, 640, 480);
+    //   console.log("Capturing...");
+    //   context.drawImage(video, 0, 0, 640, 480);
+    //   // video.stop();
+    //   this.endReaction();
+    // },
+    endReaction() {
+      this.reacting = false;
+      this.hasReacted = true;
     },
     inputFilter(newFile, oldFile, prevent) {
       if (newFile && !oldFile) {
