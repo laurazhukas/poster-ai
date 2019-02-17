@@ -4,22 +4,17 @@
     <div class="font-weight-medium display-3"></div>
     <img src="../assets/logo_transparent.png" height=400 width=400/>
     <!-- Sub text -->
-    <div class="font-weight-thin headline">Gather real data on advertisements and posters immediately</div>
+    <div class="font-weight-thin headline">immediately gather real data on advertisements and posters</div>
 
     <!-- Actions/buttons -->
-    <v-btn to="/survey">New Survey</v-btn>
+    <v-btn to="/survey">Start New Survey</v-btn>
     <v-btn>View Past Results</v-btn>
     
   </div>
 </template>
 
 <script>
-
-  export default {
-    components: {
-      
-    }
-  }
+  export default {}
 </script>
 
 <style>

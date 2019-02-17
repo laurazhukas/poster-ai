@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home.vue';
 import Survey from './views/Survey.vue';
 import Results from './views/Results.vue';
+import Commercial from './views/commercialOpportunities.vue';
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/results/:id',
       name: 'results',
       component: Results
+    },
+    {
+      path: '/commercial',
+      name: 'commercial',
+      component: Commercial
     }
   ]
 })
