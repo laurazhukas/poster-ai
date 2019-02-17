@@ -19,15 +19,20 @@
           v-model="chosenEmotions" :items="possibleEmotions"
           multiple chips/>
       </div>
+      
+      <div>
+        <user-age/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import AvgEmot from '../components/GAverageEmotion';
+import UserAge from '../components/userAgeDemographic.vue';
 
 export default {
-  components: { AvgEmot },
+  components: { AvgEmot, UserAge },
   data() {
     return {
       emotions: {
