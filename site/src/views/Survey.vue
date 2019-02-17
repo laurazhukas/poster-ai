@@ -59,7 +59,7 @@
       </transition>
 
       <transition name="next">
-        <div v-if="!evaluating && !uploading" class="evaluation">
+        <div v-if="processing" class="evaluation">
           <div class="headline font-weight-light font-italic">Processing results... Pretty graphs incoming soon!</div>
 
           <!-- Progress Spinner! -->
@@ -69,7 +69,10 @@
 
       <transition name="next">
         <div v-if="hasResults" class="evaluation">
-          <div class="headline font-weight-light font-italic">Done! Results available!</div>
+          <div class="headline font-weight-light font-italic">Processing Complete!</div>
+
+          <!-- Maybe a fancy checkmark animation :) -->
+
           <v-btn :to="resultsURL">View Results</v-btn>
           
         </div>
