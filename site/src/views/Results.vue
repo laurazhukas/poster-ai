@@ -136,6 +136,24 @@ export default {
           "session_id": "4314ac74-2070-4712-afda-01ffd70dec17",
           "image_uri": "https://storage.googleapis.com/poster-ai-bucket/aberdeen-faces-dataset/andrew!45.jpg",
           "poster_name": "blob2"
+        },
+        {
+          "url": "http://127.0.0.1:8000/face/4/",
+          "face_id": "4e7b50b0-4cc7-4e72-a2ad-221e5dac3a07",
+          "gender": "male",
+          "age": 29,
+          "anger": "0.0",
+          "contempt": "0.2",
+          "disgust": "0.000000000000",
+          "fear": "0.000000000000",
+          "happiness": "0.5",
+          "neutral": "0.1",
+          "sadness": "0.2",
+          "surprise": "0.000000000000",
+          "poster_id": "8d99c923-570d-4991-aea6-b09c09fe3123",
+          "session_id": "4314ac74-2070-4712-afda-01ffd70dec17",
+          "image_uri": "https://storage.googleapis.com/poster-ai-bucket/aberdeen-faces-dataset/andrew!45.jpg",
+          "poster_name": "blob2"
         }
       ],
       mockData: [
