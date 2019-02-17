@@ -1,10 +1,10 @@
 <template>
   <div class="home-center">
     <!-- Large intro text -->
-    <div class="font-weight-medium display-3">Want to Make Some Quick Cash?</div>
+    <div class="font-weight-medium display-3">Experince the Simplicity of Poster AI</div>
     <!-- Sub text -->
     <br>
-    <div class="font-weight-thin headline">Here's How: <br>
+    <div class="font-weight-thin headline">The User Experience: <br>
     1. Choose a company below<br>
     2. Complete their survey<br>
     3. Collect your cash
@@ -14,53 +14,15 @@
     <br>
 
     <v-layout align-start justify-space-around row wrap>
-    <!-- <v-flex sm6  v-for="url in urls">
-     
-    </v-flex> -->
-    <v-card  v-for="url in urls" style="width: 240px; height: 240px; margin: auto; margin-bottom: 30px;">
-      <v-card-media style="height: 160px; display: flex; justify-content: center; align-items: center">
-        <img :src="url" style="max-height: 160px; max-width: 160px"/>
-      </v-card-media>
-      <v-card-actions>
-        <v-btn flat color="black">Go to Survey</v-btn>
-      </v-card-actions>
-    </v-card>
-     <!-- <v-flex md2>
-       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
-        <img src="../assets/constellationLogo.jpg" style="max-height: 160px; max-width: 160px"/>
+      <v-card  v-for="url in urls" style="width: 240px; height: 240px; margin: auto; margin-bottom: 30px;">
+        <v-card-media style="height: 160px; display: flex; justify-content: center; align-items: center">
+          <img :src="url" style="max-height: 160px; max-width: 160px"/>
+        </v-card-media>
         <v-card-actions>
           <v-btn flat color="black">Go to Survey</v-btn>
         </v-card-actions>
       </v-card>
-      </v-flex>
-       <v-flex md2>
-       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
-        <img src="../assets/dattoLogo.jpg" style="max-height: 160px; max-width: 160px"/>
-        <v-card-actions>
-          <v-btn flat color="black">Go to Survey</v-btn>
-        </v-card-actions>
-      </v-card>
-      </v-flex>
-
-      <v-flex md2>
-       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
-        <img src="../assets/googleLogo.jpg" style="max-height: 160px; max-width: 160px"/>
-        <v-card-actions>
-          <v-btn flat color="black">Go to Survey</v-btn>
-        </v-card-actions>
-      </v-card>
-      </v-flex>
-
-      <v-flex md2>
-       <v-card style="height: 240px; width: 240px; margin: auto; margin-bottom: 30px;">
-        <img src="../assets/readmeLogo.jpg" style="max-height: 160px; max-width: 160px"/>
-        <v-card-actions>
-          <v-btn flat color="black">Go to Survey</v-btn>
-        </v-card-actions>
-      </v-card>
-      </v-flex> -->
     </v-layout>
-    
     
   </div>
 </template>
