@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'api.poster_ai_api'
 ]
 
 MIDDLEWARE = [
@@ -76,12 +77,12 @@ WSGI_APPLICATION = 'api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_mongodb_engine',
+        'ENGINE': 'djongo',
         'NAME': 'posterdb',
         'USER': '',
         'PASSWORD': '',
         'HOST': '34.73.39.248',
-        'PORT': '27017',
+        'PORT': 27017,
         'SUPPORTS_TRANSACTIONS': False
     }
 }
