@@ -16,8 +16,9 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
+from poster_ai_api.views import FaceList
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    path('', include('poster_ai_api.urls'))
+    path(r'^api/', FaceList.as_view())
 ]
