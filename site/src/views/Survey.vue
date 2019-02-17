@@ -67,6 +67,14 @@
         </div>
       </transition>
 
+      <transition name="next">
+        <div v-if="hasResults" class="evaluation">
+          <div class="headline font-weight-light font-italic">Done! Results available!</div>
+          <v-btn :to="resultsURL">View Results</v-btn>
+          
+        </div>
+      </transition>
+
       <video v-show="false" ref="video" id="video" width="640" height="480" autoplay></video>
       <canvas v-show="false" ref="canvas" id="canvas" width="640" height="480"/>
       
@@ -87,10 +95,12 @@ export default {
       uploading: true,
       evaluating: false,
       processing: false,
+      hasResults: false,
       evalIndex: 0,
       hasReacted: false,
       stream: null,
       imagesArray: [],
+      resultsID: 0
     };
   },
   computed: {
@@ -99,6 +109,9 @@ export default {
     },
     displayCard() {
       return this.files.length > 0;
+    },
+    resultsURL() {
+      return `/results/${this.resultsID}`;
     }
   },
   methods: {
@@ -148,6 +161,13 @@ export default {
 
         // Send results to the server
         // axios.post(``)
+
+        // Get ID with results
+
+        // Redirect to results page
+        this.resultsID = 0;
+        this.processing = false;
+        this.hasResults = true;
       } 
       // Continue to next image for evaluation
       else {
